@@ -2,7 +2,41 @@ import Head from 'next/head'
 import Image from 'next/image'
 import styles from '../styles/Home.module.css'
 
-export default function Home() {
+const URL='https://eb69c8de-c627-47d4-b0bd-246d961cbfd3.mock.pstmn.io/youtube?class=10th&subject=Maths'
+
+export async function getServerSideProps(){
+  const res=await fetch(URL);
+  const data=await res.json();
+  return{
+    props:{
+      data
+
+    }
+  }
+}
+// const url ="https://www.youtube.com/watch?v=QWG2L7KF0ZA"
+
+function getId(url) {
+  // const regExp = /^.(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]).*/;
+  // const match = url.match(regExp);
+  // console.log(match,"ttttttttttt");
+  var res = url.split('=')[1];
+  console.log(res, ' OOOOOOOOOOOOOOOOOOOOOOOooooooooooo');
+  return res;
+  //  (match && match[2].length === 11)
+  //   ?
+     match[2]
+   
+    // : null;
+}
+  
+
+
+
+export default function Home({data}) {
+ 
+// console.log('Video ID drrrrrrrrrrrrrrrr:', videoId,  iframeMarkup)
+  console.log("data",data);
   return (
     <div className={styles.container}>
       <Head>
@@ -13,43 +47,44 @@ export default function Home() {
 
       <main className={styles.main}>
         <h1 className={styles.title}>
-          Welcome to <a href="https://nextjs.org">Next.js!</a>
+          {/* Welcome to <a href="https://nextjs.org">Next.js!</a> */}
+          My PlayList
         </h1>
 
         <p className={styles.description}>
-          Get started by editing{' '}
+          Get started by editing{''}
           <code className={styles.code}>pages/index.js</code>
         </p>
 
-        <div className={styles.grid}>
-          <a href="https://nextjs.org/docs" className={styles.card}>
-            <h2>Documentation &rarr;</h2>
-            <p>Find in-depth information about Next.js features and API.</p>
-          </a>
+        <ul className={styles.grid}>
+          {
+            data.map((item)=>{
 
-          <a href="https://nextjs.org/learn" className={styles.card}>
-            <h2>Learn &rarr;</h2>
-            <p>Learn about Next.js in an interactive course with quizzes!</p>
-          </a>
 
-          <a
-            href="https://github.com/vercel/next.js/tree/canary/examples"
-            className={styles.card}
-          >
-            <h2>Examples &rarr;</h2>
-            <p>Discover and deploy boilerplate example Next.js projects.</p>
-          </a>
+               const videoId = getId(item['link']);
+  
+  const iframeMarkup = '<iframe width="250" height="315" src="//www.youtube.com/embed/' 
+    + videoId + ' frameborder="0" allowfullscreen></iframe>';
 
-          <a
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-            className={styles.card}
-          >
-            <h2>Deploy &rarr;</h2>
-            <p>
-              Instantly deploy your Next.js site to a public URL with Vercel.
-            </p>
-          </a>
-        </div>
+    
+
+              console.log(item,"item");
+              const {id,snippet}=item;
+              // const {title}=snippet
+              return(<li  className={styles.card}>
+                <a href="">
+                  <h2>{item.title}</h2>
+                  <h2> {item.description}</h2>
+                  {/* <img src={item.link}/> */}
+                  {/* <video src='https://youtu.be/h1hdxIV-03M'/> */}
+                  <div dangerouslySetInnerHTML={{ __html: iframeMarkup }}></div>
+                  {/* <p>Find in-depth information about Next.js features and API.</p> */}
+                </a>
+                </li>)
+            })
+          }
+          
+</ul>
       </main>
 
       <footer className={styles.footer}>
